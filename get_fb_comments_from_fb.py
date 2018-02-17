@@ -7,9 +7,9 @@ try:
 except ImportError:
     from urllib2 import urlopen, Request
 
-app_id = "<FILL IN>"
-app_secret = "<FILL IN>"  # DO NOT SHARE WITH ANYONE!
-file_id = "cnn"
+app_id = "121368425347233"
+app_secret = "f19937bf4e14268bcc310b1deda8eba7"  # DO NOT SHARE WITH ANYONE!
+file_id = "nytimes"
 
 access_token = app_id + "|" + app_secret
 
@@ -88,9 +88,11 @@ def processFacebookComment(comment, status_id, parent_id=''):
     # so must check for existence first
 
     comment_id = comment['id']
+    #print(comment['from'])
     comment_message = '' if 'message' not in comment or comment['message'] \
         is '' else unicode_decode(comment['message'])
-    comment_author = unicode_decode(comment['from']['name'])
+    comment_author = 'undiscoverable'
+    #unicode_decode(comment['from']['name'])
     num_reactions = 0 if 'reactions' not in comment else \
         comment['reactions']['summary']['total_count']
 
@@ -151,11 +153,12 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
                     base_url = base + node + parameters + after
 
                     url = getFacebookCommentFeedUrl(base_url)
-                    # print(url)
                     comments = json.loads(request_until_succeed(url))
+                    #print(comments)
                     reactions = getReactionsForComments(base_url)
 
                     for comment in comments['data']:
+                        #print(comment)
                         comment_data = processFacebookComment(
                             comment, status['status_id'])
                         reactions_data = reactions[comment_data[0]]

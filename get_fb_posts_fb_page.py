@@ -7,13 +7,13 @@ try:
 except ImportError:
     from urllib2 import urlopen, Request
 
-app_id = "<FILL IN>"
-app_secret = "<FILL IN>"  # DO NOT SHARE WITH ANYONE!
-page_id = "cnn"
+app_id = "121368425347233"
+app_secret = "f19937bf4e14268bcc310b1deda8eba7"  # DO NOT SHARE WITH ANYONE!
+page_id = "nytimes"
 
 # input date formatted as YYYY-MM-DD
-since_date = ""
-until_date = ""
+since_date = "2017-01-01"
+until_date = "2018-02-01"
 
 access_token = app_id + "|" + app_secret
 
