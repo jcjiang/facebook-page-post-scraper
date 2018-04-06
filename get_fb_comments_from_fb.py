@@ -9,7 +9,7 @@ except ImportError:
 
 app_id = "121368425347233"
 app_secret = "f19937bf4e14268bcc310b1deda8eba7"  # DO NOT SHARE WITH ANYONE!
-file_id = "nytimes"
+file_id = "BuzzFeed"
 
 access_token = app_id + "|" + app_secret
 
@@ -39,6 +39,10 @@ def unicode_decode(text):
         return text.encode('utf-8').decode()
     except UnicodeDecodeError:
         return text.encode('utf-8')
+
+def unicode_normalize(text):
+    return text.translate({ 0x2018:0x27, 0x2019:0x27, 0x201C:0x22,
+                            0x201D:0x22, 0xa0:0x20 }).encode('utf-8')
 
 
 def getFacebookCommentFeedUrl(base_url):
@@ -91,7 +95,7 @@ def processFacebookComment(comment, status_id, parent_id=''):
     #print(comment['from'])
     comment_message = '' if 'message' not in comment or comment['message'] \
         is '' else unicode_decode(comment['message'])
-    comment_author = 'undiscoverable'
+    comment_author = "deprecated"
     #unicode_decode(comment['from']['name'])
     num_reactions = 0 if 'reactions' not in comment else \
         comment['reactions']['summary']['total_count']
@@ -132,7 +136,7 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
         after = ''
         base = "https://graph.facebook.com/v2.9"
         parameters = "/?limit={}&access_token={}".format(
-            100, access_token)
+            1000, access_token)
 
         print("Scraping {} Comments From Posts: {}\n".format(
             file_id, scrape_starttime))
@@ -142,17 +146,19 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
 
             # Uncomment below line to scrape comments for a specific status_id
             # reader = [dict(status_id='5550296508_10154352768246509')]
-
+            i = 0;
             for status in reader:
                 has_next_page = True
-
+                i += 1;
+                print("current status count:" + str(i));
                 while has_next_page:
 
                     node = "/{}/comments".format(status['status_id'])
                     after = '' if after is '' else "&after={}".format(after)
-                    base_url = base + node + parameters + after
+                    base_url = base + node + parameters + "&filter=stream" + after
 
                     url = getFacebookCommentFeedUrl(base_url)
+                    print(url);
                     comments = json.loads(request_until_succeed(url))
                     #print(comments)
                     reactions = getReactionsForComments(base_url)
@@ -224,8 +230,10 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
                             after = comments['paging']['cursors']['after']
                         else:
                             has_next_page = False
+                            after = ''
                     else:
                         has_next_page = False
+                        after = ''
 
         print("\nDone!\n{} Comments Processed in {}".format(
             num_processed, datetime.datetime.now() - scrape_starttime))

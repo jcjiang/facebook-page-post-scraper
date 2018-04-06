@@ -9,11 +9,11 @@ except ImportError:
 
 app_id = "121368425347233"
 app_secret = "f19937bf4e14268bcc310b1deda8eba7"  # DO NOT SHARE WITH ANYONE!
-page_id = "nytimes"
+page_id = "NBCNews"
 
 # input date formatted as YYYY-MM-DD
-since_date = "2017-01-01"
-until_date = "2018-02-01"
+since_date = "2018-03-24"
+until_date = "2018-03-27"
 
 access_token = app_id + "|" + app_secret
 
@@ -124,7 +124,7 @@ def processFacebookPageFeedStatus(status):
 
 
 def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
-    with open('{}_facebook_statuses.csv'.format(page_id), 'w') as file:
+    with open('{}_facebook_statuses-2.csv'.format(page_id), 'w') as file:
         w = csv.writer(file)
         w.writerow(["status_id", "status_message", "link_name", "status_type",
                     "status_link", "status_published", "num_reactions",
@@ -151,6 +151,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token, since_date, until_date):
             base_url = base + node + parameters + after + since + until
 
             url = getFacebookPageFeedUrl(base_url)
+            print(url);
             statuses = json.loads(request_until_succeed(url))
             reactions = getReactionsForStatuses(base_url)
 
