@@ -9,7 +9,7 @@ except ImportError:
 
 app_id = "121368425347233"
 app_secret = "f19937bf4e14268bcc310b1deda8eba7"  # DO NOT SHARE WITH ANYONE!
-file_id = "BuzzFeed"
+file_id = "HuffPost"
 
 access_token = app_id + "|" + app_secret
 
